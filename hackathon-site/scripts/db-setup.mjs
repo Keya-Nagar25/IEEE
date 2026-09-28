@@ -9,7 +9,7 @@ try {
 
 const url = process.env.DATABASE_URL;
 if (!url) {
-  console.error("DATABASE_URL is not set. Put it in .env.local (see .env.example).");
+  console.error("DATABASE_URL is not set. Put it in .env.local (see .env).");
   process.exit(1);
 }
 
