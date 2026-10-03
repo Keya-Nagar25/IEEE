@@ -8,7 +8,6 @@ import type { Settings } from "@/lib/settings";
 
 export default function SettingsForm({ initial }: { initial: Settings }) {
   const router = useRouter();
-  // datetime-local values depend on the browser's timezone, so fill them after mount.
   const [start, setStart] = useState("");
   const [deadline, setDeadline] = useState("");
   useEffect(() => {
