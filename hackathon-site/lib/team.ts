@@ -20,8 +20,6 @@ export type TeamView = {
   deadline: string;
   result: null | { rank: number | null; ranked: number; score?: number | null };
 };
-
-/** Everything the team dashboard shows. GitHub integrity status is admin-only (plan §9). */
 export async function getTeamView(teamId: string): Promise<TeamView | null> {
   const sql = db();
   const [t] = await sql<
