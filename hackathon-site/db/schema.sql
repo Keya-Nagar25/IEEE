@@ -1,7 +1,3 @@
--- Hackathon site schema. Safe to run more than once.
--- Run with `npm run db:setup`, or paste into Supabase → SQL Editor → Run.
-
--- ─── Tables ─────────────────────────────────────────────────────────────────
 
 create table if not exists teams (
   id                  uuid primary key default gen_random_uuid(),
@@ -10,8 +6,8 @@ create table if not exists teams (
   leader_name         text not null default '',
   leader_email        text not null default '',
   college             text not null default '',
-  login_code_hash     text not null,              -- HMAC of the code; used to verify logins
-  login_code_enc      text not null,              -- AES-GCM ciphertext; lets admins look a code up
+  login_code_hash     text not null,             
+  login_code_enc      text not null,             
   github_repo_url     text,
   github_status       text check (github_status in ('clean', 'review', 'flagged')),
   github_note         text,
@@ -38,7 +34,7 @@ create index if not exists members_team_id_idx on members (team_id);
 create table if not exists criteria (
   id       uuid primary key default gen_random_uuid(),
   name     text not null unique,
-  weight   numeric(5, 2) not null check (weight >= 0 and weight <= 100),  -- percent
+  weight   numeric(5, 2) not null check (weight >= 0 and weight <= 100),  
   position integer not null default 0
 );
 
@@ -57,7 +53,7 @@ create table if not exists admins (
   id            uuid primary key default gen_random_uuid(),
   name          text not null,
   email         text not null,
-  password_hash text not null,                    -- bcrypt
+  password_hash text not null,                    
   created_at    timestamptz not null default now()
 );
 create unique index if not exists admins_email_lower_key on admins (lower(email));
@@ -68,7 +64,6 @@ create table if not exists settings (
   updated_at timestamptz not null default now()
 );
 
--- Audit trail for team and admin logins (plan §7).
 create table if not exists login_events (
   id         bigint generated always as identity primary key,
   kind       text not null check (kind in ('team', 'admin')),
@@ -80,15 +75,10 @@ create table if not exists login_events (
   created_at timestamptz not null default now()
 );
 create index if not exists login_events_lookup_idx on login_events (kind, identifier, created_at desc);
-
--- One row per live channel. Browsers subscribe to changes here through Supabase Realtime,
--- then refetch the (server-gated) leaderboard API. Holds only a timestamp, so it is safe to expose.
 create table if not exists live_signals (
   key       text primary key,
   bumped_at timestamptz not null default now()
 );
-
--- ─── Seed data ──────────────────────────────────────────────────────────────
 
 insert into settings (key, value) values
   ('event_start_time', ''),
@@ -110,8 +100,6 @@ select * from (values
 where not exists (select 1 from criteria);
 
 insert into live_signals (key) values ('leaderboard') on conflict (key) do nothing;
-
--- ─── Live leaderboard signal ────────────────────────────────────────────────
 
 create or replace function bump_leaderboard_signal() returns trigger
 language plpgsql as $$
@@ -135,8 +123,6 @@ drop trigger if exists teams_bump_leaderboard_ins_del on teams;
 create trigger teams_bump_leaderboard_ins_del
   after insert or delete on teams
   for each statement execute function bump_leaderboard_signal();
-
--- Only columns the leaderboard shows; login attempts etc. do not wake every browser.
 drop trigger if exists teams_bump_leaderboard_upd on teams;
 create trigger teams_bump_leaderboard_upd
   after update of name, team_number, submission_status, submitted_at on teams
@@ -147,11 +133,6 @@ create trigger settings_bump_leaderboard
   after insert or update on settings
   for each row when (new.key in ('leaderboard_visible', 'scores_visible'))
   execute function bump_leaderboard_signal();
-
--- ─── Lock down the Supabase auto-generated API ──────────────────────────────
--- The app talks to Postgres directly as the table owner, so RLS does not affect it.
--- RLS with no policies means the public anon key can read nothing, except the signal row.
-
 alter table teams        enable row level security;
 alter table members      enable row level security;
 alter table criteria     enable row level security;
