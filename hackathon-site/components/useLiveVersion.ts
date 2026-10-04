@@ -5,14 +5,6 @@ import { useEffect, useState } from "react";
 export type LiveMode = "connecting" | "live" | "polling";
 
 const bucket = (ms: number) => Math.floor(Date.now() / ms);
-
-/**
- * Subscribes to the `live_signals` row through Supabase Realtime and returns its
- * latest timestamp. Components refetch `/api/leaderboard?v=<version>` whenever it
- * changes — every browser asks for the same URL, so the CDN answers almost all of
- * them. Without Realtime (env not set, socket dropped) it falls back to polling
- * every 30s using a shared time bucket, which is just as cache-friendly.
- */
 export function useLiveVersion() {
   const [version, setVersion] = useState("");
   const [mode, setMode] = useState<LiveMode>("connecting");
@@ -56,7 +48,7 @@ export function useLiveVersion() {
               if (status === "SUBSCRIBED") {
                 clearInterval(poll);
                 setMode("live");
-                // We may have missed a change while (re)connecting.
+                
                 setVersion((v) => (v ? `sub-${bucket(10_000)}` : v));
               } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
                 startPolling();
