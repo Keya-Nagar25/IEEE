@@ -1,6 +1,4 @@
-// Creates an organizer login (or resets the password of an existing one).
-// Usage: npm run admin:create
-//        npm run admin:create -- --name "Devesh" --email devesh@example.com
+
 import { hash } from "bcryptjs";
 import readline from "node:readline/promises";
 import postgres from "postgres";
