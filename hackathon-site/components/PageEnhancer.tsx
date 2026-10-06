@@ -1,14 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-
-/**
- * The page's "small IIFE": mobile menu + entrance-animation bookkeeping.
- *  1. Each .appear / .hero-photo gets .is-in on its own animationend.
- *  2. If animations aren't running after two frames, force .is-in everywhere.
- *  3. Burger toggles body.menu-open.  4. Nav links, backdrop and Escape close it.
- *  5. Resizing to desktop width closes it.
- */
 export default function PageEnhancer() {
   useEffect(() => {
     const body = document.body;
@@ -43,7 +35,7 @@ export default function PageEnhancer() {
     const targets = Array.from(document.querySelectorAll<HTMLElement>(".appear, .hero-photo"));
     const handlers = targets.map((el) => {
       const done = (e: AnimationEvent) => {
-        if (e.target !== el) return; // ignore bubbling from children (badge star, headline em)
+        if (e.target !== el) return; 
         el.classList.add("is-in");
         el.removeEventListener("animationend", done);
       };
