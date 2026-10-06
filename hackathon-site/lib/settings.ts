@@ -3,8 +3,8 @@ import { db, hasDatabase } from "./db";
 import { event } from "./event";
 
 export type Settings = {
-  eventStart: string; // ISO
-  submissionDeadline: string; // ISO
+  eventStart: string; 
+  submissionDeadline: string; 
   leaderboardVisible: boolean;
   scoresVisible: boolean;
   themeRevealed: boolean;
@@ -55,8 +55,6 @@ export async function getSettings(): Promise<Settings> {
   const rows = await db()<{ key: string; value: string }[]>`select key, value from settings`;
   return fromRows(rows);
 }
-
-/** For public pages: never let a database hiccup take the page down. */
 export async function getSettingsSafe(): Promise<Settings> {
   if (!hasDatabase()) return defaultSettings;
   try {
