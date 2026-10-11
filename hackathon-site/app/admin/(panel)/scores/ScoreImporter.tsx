@@ -62,13 +62,13 @@ export default function ScoreImporter({ criteria, teams }: { criteria: Criterion
 
     const built = rows
       .map((r, i) => ({
-        sheetRow: i + 2, // header is row 1
+        sheetRow: i + 2, 
         teamNumber: r[teamCol],
         judge: judgeCol ? String(r[judgeCol] ?? "").trim() : "",
         notes: notesCol ? String(r[notesCol] ?? "").trim() : "",
         values: Object.fromEntries(critCols.filter((c) => c.col).map((c) => [c.id, r[c.col]])),
       }))
-      // Template rows nobody filled in are skipped rather than reported as errors.
+      
       .filter((r) => Object.values(r.values).some((v) => v !== "" && v != null));
     if (!built.length) {
       setPayload(null);
