@@ -8,8 +8,6 @@ export type Cta = { label: string; href: string; external?: boolean };
 
 const delay = (d: string) => ({ "--d": d }) as CSSProperties;
 const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
-
-// Entrance motion per nav slot (prompt: scale / soft / scale / soft, 0.16s → 0.52s).
 const NAV_MOTION = [
   ["appear--scale", "0.16s"],
   ["appear--soft", "0.28s"],
@@ -24,10 +22,10 @@ export default function SiteHeader({
   ctaNode,
   logoHref = "/",
 }: {
-  animate?: boolean; // landing entrance motion
-  current?: string; // marks the active nav link
+  animate?: boolean; 
+  current?: string; 
   cta?: Cta;
-  ctaNode?: ReactNode; // replaces the CTA link (e.g. a log-out button)
+  ctaNode?: ReactNode; 
   logoHref?: string;
 }) {
   const motion = (mod: string, d: string) =>
