@@ -9,8 +9,6 @@ import PrintButton from "./PrintButton";
 
 export const metadata: Metadata = { title: "Credential chits", robots: { index: false } };
 export const dynamic = "force-dynamic";
-
-/** Cut-out chits for check-in (plan §7): team number, name, login code, where to log in. */
 export default async function PrintPage() {
   if (!(await getAdmin())) redirect("/admin/login");
   const teams = (await getAdminTeams()).filter((t) => t.status !== "disqualified");
