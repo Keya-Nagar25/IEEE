@@ -1,6 +1,4 @@
 "use client";
-
-/** Excel helpers (SheetJS), loaded on demand so they never weigh down other pages. */
 export async function downloadXlsx(filename: string, sheets: { name: string; rows: Record<string, unknown>[] }[]) {
   const XLSX = await import("xlsx");
   const wb = XLSX.utils.book_new();
@@ -12,8 +10,6 @@ export async function downloadXlsx(filename: string, sheets: { name: string; row
   }
   XLSX.writeFile(wb, filename);
 }
-
-/** Reads the first sheet of a workbook into an array of rows keyed by header. */
 export async function readFirstSheet(file: File) {
   const XLSX = await import("xlsx");
   const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
