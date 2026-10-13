@@ -2,7 +2,6 @@
 
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string; status: number };
 
-/** JSON request helper for client components; never throws. */
 export async function api<T = Record<string, unknown>>(url: string, body?: unknown, method = "POST"): Promise<ApiResult<T>> {
   try {
     const res = await fetch(url, {
