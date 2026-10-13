@@ -7,13 +7,10 @@ import { event } from "@/lib/event";
 import { formatDateRange } from "@/lib/format";
 import { getSettingsSafe, phaseOf } from "@/lib/settings";
 
-// Served from the CDN; regenerated at most every 5 minutes, or immediately when an admin changes settings.
 export const revalidate = 300;
 
 const HERO_VIDEO =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260818_072341_50851634-bbc3-4c33-9acc-7647d4db44aa.mp4";
-
-// Raw HTML so `muted`/`playsinline` are in the server markup and autoplay starts before hydration.
 const VIDEO_HTML = `<video src="${HERO_VIDEO}" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback></video>`;
 
 const d = (delay: string) => ({ "--d": delay }) as CSSProperties;
