@@ -6,8 +6,6 @@ import { event } from "@/lib/event";
 import { formatDateRange } from "@/lib/format";
 import { getSettingsSafe, phaseOf } from "@/lib/settings";
 import LiveLeaderboard from "./LiveLeaderboard";
-
-// The shell is static; rankings stream in on the client from the cached API.
 export const revalidate = 300;
 export const metadata: Metadata = { title: "Leaderboard", description: `Live team rankings for ${event.name}.` };
 
